@@ -2,6 +2,7 @@ package com.nhnacademy.pms.tdd;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,14 +19,12 @@ class EntranceTest {
 
     @DisplayName("[1] 주차장에 차가 들어오면 번호판을 인식한다.")
     @Test
-    void scanLicensePlate_aCar() {
-        Car car = new Car("1234");
-        when(entrance.scan(car)).thenReturn(car);
+    void scan_licensePlate_forACar() {
+        Car car = new Car("34조5789");
+        when(entrance.scan(car)).thenReturn(car.getNumber());
 
-        assertThat(entrance.scan(car))
-            .isNotNull()
-            .isInstanceOf(Car.class);
+        assertThat(entrance.scan(car)).isNotNull();
 
-        // verify(entrance.scan(car), times(1));
+        verify(entrance).scan(car);
     }
 }

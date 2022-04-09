@@ -1,5 +1,11 @@
 package com.nhnacademy.pms.tdd;
 
-public interface Entrance {
-    Car scan(Car car);
+public class Entrance {
+    String scan(Car car) {
+        return this.scanLicensePlate(car);
+    }
+
+    private String scanLicensePlate(Car car) {
+        return car.getNumber();
+    }
 }
