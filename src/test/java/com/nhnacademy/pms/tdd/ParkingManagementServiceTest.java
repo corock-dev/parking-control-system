@@ -28,13 +28,16 @@ class ParkingManagementServiceTest {
     @DisplayName("[1] 차를 A-1 주차 구역에 주차한다.")
     @Test
     void parkAt_specificParkingSpace() {
-        service.parkAt(new ParkingSpace(A1, new Car("34조5789")));
+        String licenseNumber = "34조5789";
+        service.parkAt(new ParkingSpace(A1, new Car(licenseNumber)));
 
-        ParkingSpace space = new ParkingSpace(valueOf("A1"), new Car("34조5789"));
-        when(repository.findCarByLicenseNumber("34조5789")).thenReturn(space);
+        ParkingSpace space = new ParkingSpace(valueOf("A1"), new Car(licenseNumber));
+        when(repository.findCarByLicenseNumber(licenseNumber)).thenReturn(space);
 
-        assertThat(repository.findCarByLicenseNumber("34조5789")).isNotNull();
+        assertThat(repository.findCarByLicenseNumber(licenseNumber))
+            .isNotNull()
+            .isInstanceOf(ParkingSpace.class);
 
-        verify(repository, times(1)).findCarByLicenseNumber("34조5789");
+        verify(repository, times(1)).findCarByLicenseNumber(licenseNumber);
     }
 }
