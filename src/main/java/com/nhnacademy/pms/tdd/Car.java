@@ -1,13 +1,13 @@
 package com.nhnacademy.pms.tdd;
 
 public class Car {
-    private final String number;
+    private final String licenseNumber;
 
-    public Car(String number) {
-        this.number = number;
+    public Car(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
     }
 
-    public String getNumber() {
-        return number;
+    public String getLicenseNumber() {
+        return licenseNumber;
     }
 }

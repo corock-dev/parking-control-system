@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class EntranceTest {
+class EntranceMockTest {
     private Entrance entrance;
 
     @BeforeEach
@@ -21,10 +21,10 @@ class EntranceTest {
     @Test
     void scan_licensePlate_forACar() {
         Car car = new Car("34조5789");
-        when(entrance.scan(car)).thenReturn(car.getNumber());
+        when(entrance.scanLicensePlateNumber(car)).thenReturn(car.getLicenseNumber());
 
-        assertThat(entrance.scan(car)).isNotNull();
+        assertThat(entrance.scanLicensePlateNumber(car)).isNotNull();
 
-        verify(entrance).scan(car);
+        verify(entrance).scanLicensePlateNumber(car);
     }
 }

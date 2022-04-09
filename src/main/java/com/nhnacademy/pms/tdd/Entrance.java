@@ -1,11 +1,10 @@
 package com.nhnacademy.pms.tdd;
 
 public class Entrance {
-    String scan(Car car) {
-        return this.scanLicensePlate(car);
-    }
-
-    private String scanLicensePlate(Car car) {
-        return car.getNumber();
+    String scanLicensePlateNumber(Car car) {
+        if (car.getLicenseNumber() == null) {
+            throw new IllegalArgumentException("null");
+        }
+        return car.getLicenseNumber();
     }
 }
