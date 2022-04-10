@@ -104,7 +104,7 @@ class ParkingManagementServiceTest {
         verify(repository, times(1)).findUserByParkingSpaceCar(space);
     }
 
-    private List<Integer> parse(String parkingTime) {
+    static List<Integer> parse(String parkingTime) {
         String[] dateTimeSources = parkingTime.split("-|T|:");
         List<Integer> parsingDateTimeSources = new ArrayList<>();
         for (String dateTimeSource : dateTimeSources) {

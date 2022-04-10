@@ -1,7 +1,7 @@
 package com.nhnacademy.pms.tdd;
 
 public class Exit {
-    public HalfPastParkingFee pay(Car car) {
+    public ParkingFee pay(Car car) {
         return null;
     }
 }
