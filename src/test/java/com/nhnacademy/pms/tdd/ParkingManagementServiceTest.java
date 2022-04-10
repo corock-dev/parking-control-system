@@ -12,15 +12,20 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.nhnacademy.pms.tdd.exception.NotEnoughMoneyException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class ParkingManagementServiceTest {
-    // SUT
     private ParkingManagementService service;
 
-    // DOC
     private ParkingLotRepository repository;
 
     @BeforeEach
@@ -33,9 +38,10 @@ class ParkingManagementServiceTest {
     @Test
     void parkAt_specificParkingSpace() {
         String licenseNumber = "34조5789";
-        service.parkAt(new ParkingSpace(A1, new Car(licenseNumber)));
+        service.parkAt(new ParkingSpace(A1, new Car(licenseNumber), LocalDateTime.now()));
 
-        ParkingSpace space = new ParkingSpace(valueOf("A1"), new Car(licenseNumber));
+        ParkingSpace space = new ParkingSpace(valueOf("A1"), new Car(licenseNumber),
+            LocalDateTime.now());
         when(repository.findParkingSpaceByLicenseNumber(licenseNumber)).thenReturn(space);
 
         assertThat(repository.findParkingSpaceByLicenseNumber(licenseNumber))
@@ -64,5 +70,43 @@ class ParkingManagementServiceTest {
 
         verify(repository, times(1)).findParkingSpaceByLicenseNumber(licenseNumber);
         verify(repository, times(1)).findUserByParkingSpaceCar(space);
+    }
+
+    @DisplayName("[1] 주차장에서 차가 나갈 때 주차 시간만큼 결제를 진행한다(2022년 4월 9일 16시 정각 주차).")
+    @ParameterizedTest
+    @ValueSource(strings = {"2022-04-09T16:30:00", "2022-04-09T16:40:00", "2022-04-10T16:10:00"})
+    void exit_payParkingFee(String parkingTime) {
+        String licenseNumber = "34조5789";
+        Car car = new Car(licenseNumber);
+
+        Money money = spy(new Money(10_000L, WON));
+        User user = spy(new User("CoRock", money, car));
+        ParkingSpace space = spy(new ParkingSpace(A1, car,
+            LocalDateTime.of(LocalDate.of(2022, 4, 9), LocalTime.of(16, 0, 0))));
+
+        when(repository.findParkingSpaceByLicenseNumber(licenseNumber)).thenReturn(space);
+        when(repository.findUserByParkingSpaceCar(space)).thenReturn(user);
+
+        service.parkAt(space);
+
+        List<Integer> dateTimeSources = parse(parkingTime);
+        LocalDateTime parkingDateTime = LocalDateTime.of(
+            LocalDate.of(dateTimeSources.get(0), dateTimeSources.get(1), dateTimeSources.get(2)),
+            LocalTime.of(dateTimeSources.get(3), dateTimeSources.get(4), dateTimeSources.get(5)));
+
+        assertThat(service.exit(car, parkingDateTime))
+            .isNotNull()
+            .isNotEmpty();
+
+        verify(repository, times(1)).findUserByParkingSpaceCar(space);
+    }
+
+    private List<Integer> parse(String parkingTime) {
+        String[] dateTimeSources = parkingTime.split("-|T|:");
+        List<Integer> parsingDateTimeSources = new ArrayList<>();
+        for (String dateTimeSource : dateTimeSources) {
+            parsingDateTimeSources.add(Integer.parseInt(dateTimeSource));
+        }
+        return parsingDateTimeSources;
     }
 }

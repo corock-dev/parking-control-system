@@ -19,11 +19,12 @@ public class ParkingLotRepository {
     }
 
     public void enter(Car car) {
-        this.entrance.scanLicensePlateNumber(car);
+        String licenseNumber = this.entrance.scanLicensePlateNumber(car);
+        // new Thread(car).start();
     }
 
-    public Bill exit() {
-        return null;
+    public ParkingFee exit(Car car) {
+        return exit.pay(car);
     }
 
     public User findUserByParkingSpaceCar(ParkingSpace space) {
