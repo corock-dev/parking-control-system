@@ -4,6 +4,7 @@ import static com.nhnacademy.pms.tdd.Car.CarType.COMPACT;
 import static com.nhnacademy.pms.tdd.Money.Currency.WON;
 import static com.nhnacademy.pms.tdd.ParkingSpace.ParkingSpaceCode.A1;
 import static com.nhnacademy.pms.tdd.ParkingSpace.ParkingSpaceCode.valueOf;
+import static com.nhnacademy.pms.tdd.User.Membership.PAYCO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
@@ -15,6 +16,7 @@ import static org.mockito.Mockito.when;
 import com.nhnacademy.pms.tdd.exception.NotEnoughMoneyException;
 import com.nhnacademy.pms.tdd.repository.ParkingLotRepository;
 import com.nhnacademy.pms.tdd.service.ParkingManagementService;
+import com.nhnacademy.pms.tdd.service.Receipt;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -111,5 +113,33 @@ class ParkingManagementServiceTest {
             parsingDateTimeSources.add(Integer.parseInt(dateTimeSource));
         }
         return parsingDateTimeSources;
+    }
+
+    @DisplayName("사용자가 PAYCO 회원인 경우에는 주차 요금이 10% 할인됩니다.")
+    @Test
+    public void pay_ifUserIsPaycoMembership_thenDiscountTenPercentParkingFee() {
+        String licenseNumber = "34조5789";
+        Car car = new Car(licenseNumber, COMPACT);
+        User user = new User("CoRock", new Money(13_500L, WON), car, PAYCO);
+
+        repository = spy(new ParkingLotRepository(mock(Entrance.class), mock(Exit.class)));
+
+        LocalDateTime startParkingTime = createLocalDateTime(2022, 4, 9, 16, 0, 0);
+        ParkingSpace space = new ParkingSpace(A1, car, startParkingTime);
+
+        LocalDateTime endParkingTime = createLocalDateTime(2022, 4, 10, 16, 40, 0);
+
+        Receipt receipt = new Receipt(new Money(13_500L, WON));
+        when(repository.findParkingSpaceByLicenseNumber(licenseNumber)).thenReturn(space);
+        when(repository.findUserByParkingSpaceCar(space)).thenReturn(user);
+        // when(service.pay(car)).thenReturn(receipt);
+
+        // confirmMembership()
+        // assertThat(exit.pay(car, endParkingTime))
+    }
+
+    private LocalDateTime createLocalDateTime(int year, int month, int dayOfMonth, int hour,
+                                              int minute, int second) {
+        return LocalDateTime.of(year, month, dayOfMonth, hour, minute, second);
     }
 }

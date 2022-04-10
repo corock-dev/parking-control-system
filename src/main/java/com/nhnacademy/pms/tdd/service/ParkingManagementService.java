@@ -28,7 +28,7 @@ public class ParkingManagementService {
         LocalDateTime.of(2022, 4, 9, 16, 0, 0);
     }
 
-    public void pay(Car car) {
+    public Receipt pay(Car car) {
         ParkingSpace space = repository.findParkingSpaceByLicenseNumber(car.getLicenseNumber());
         User user = repository.findUserByParkingSpaceCar(space);
         Money money = user.getMoney();
@@ -38,7 +38,9 @@ public class ParkingManagementService {
                 + "(" + user.getCar().getLicenseNumber() + ") have not enough money");
         }
 
-        repository.getExits().pay(car);
+        ParkingFee parkingFee = repository.getExits().pay(car);
+
+        return new Receipt(new Money(0L, null));
     }
 
     public List<ParkingFee> exit(Car car, LocalDateTime parkingDateTime) {
