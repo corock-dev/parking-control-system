@@ -14,6 +14,6 @@ public class Exit {
         if (car.getType() == COMPACT) {
             return new HalfPastParkingFee(new Money(500L, WON));
         }
-        return null;
+        return new TotalParkingFee(new Money(0L, WON));
     }
 }
