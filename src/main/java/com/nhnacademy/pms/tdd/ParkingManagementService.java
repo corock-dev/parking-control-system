@@ -29,7 +29,7 @@ public class ParkingManagementService {
                 + "(" + user.getCar().getLicenseNumber() + ") have not enough money");
         }
 
-        repository.getExit().pay(car);
+        repository.getExits().pay(car);
     }
 
     public List<ParkingFee> exit(Car car, LocalDateTime parkingDateTime) {
