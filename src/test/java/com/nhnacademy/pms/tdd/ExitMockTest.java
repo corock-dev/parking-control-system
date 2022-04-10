@@ -57,7 +57,7 @@ class ExitMockTest {
         verify(exit, times(1)).pay(car);
     }
 
-    @DisplayName("경차의 경우 요금이 50% 감면된다.")
+    @DisplayName("[3] 경차의 경우 요금이 50% 감면된다.")
     @Test
     void pay_isAvailableHalfPriceForCompactCar() {
         Car car = new Car("34조5789", COMPACT);
