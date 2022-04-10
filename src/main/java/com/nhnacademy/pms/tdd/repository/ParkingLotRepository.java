@@ -1,5 +1,11 @@
-package com.nhnacademy.pms.tdd;
+package com.nhnacademy.pms.tdd.repository;
 
+import com.nhnacademy.pms.tdd.Car;
+import com.nhnacademy.pms.tdd.Entrance;
+import com.nhnacademy.pms.tdd.Exit;
+import com.nhnacademy.pms.tdd.ParkingFee;
+import com.nhnacademy.pms.tdd.ParkingSpace;
+import com.nhnacademy.pms.tdd.User;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,6 +3,7 @@ package com.nhnacademy.pms.tdd;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import com.nhnacademy.pms.tdd.repository.ParkingLotRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

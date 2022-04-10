@@ -17,7 +17,7 @@ public class EntranceNewTest {
     @DisplayName("[1] 번호판을 인식할 수 없는 차가 주차장에 들어오면 예외를 발생한다.")
     @Test
     void scan_unknownLicensePlate_forACar() {
-        Car car = new Car(null);
+        Car car = new Car(null, null);
 
         assertThatIllegalArgumentException().isThrownBy(() -> entrance.scanLicensePlateNumber(car))
             .withMessageContaining("null");

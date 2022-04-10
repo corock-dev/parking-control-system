@@ -1,8 +1,8 @@
 package com.nhnacademy.pms.tdd;
 
+import static com.nhnacademy.pms.tdd.Car.CarType.COMPACT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -24,7 +24,7 @@ class EntranceMockTest {
     @DisplayName("[1] 주차장에 차가 들어오면 번호판을 인식한다.")
     @Test
     void scan_licensePlate_forACar() {
-        Car car = new Car("34조5789");
+        Car car = new Car("34조5789", COMPACT);
         when(entrance.scanLicensePlateNumber(car)).thenReturn(car.getLicenseNumber());
 
         assertThat(entrance.scanLicensePlateNumber(car)).isNotNull();
@@ -35,11 +35,12 @@ class EntranceMockTest {
     @DisplayName("[3] 주차장에 대형차는 주차할 수 없다.")
     @Test
     void canLargeCarBeParked() {
-        Car truck = mock(LargeCar.class);
+        Car truck = mock(Car.class);
 
-        doThrow(new CannotBeParkedCarTypeException("The large car cannot be parked")).when(entrance).scanCarType(truck);
+        doThrow(new CannotBeParkedCarTypeException("The large car cannot be parked")).when(entrance)
+            .scanCarType(truck);
 
-        assertThat(truck).isNotNull().isInstanceOf(LargeCar.class);
+        assertThat(truck).isNotNull().isInstanceOf(Car.class);
         assertThatThrownBy(() -> entrance.scanCarType(truck))
             .isInstanceOf(CannotBeParkedCarTypeException.class)
             .hasMessageContainingAll("large car", "cannot be parked");

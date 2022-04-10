@@ -13,7 +13,7 @@ public class Money {
         return amount;
     }
 
-    enum Currency {
+    public enum Currency {
         WON
     }
 }

@@ -1,9 +1,11 @@
 package com.nhnacademy.pms.tdd;
 
+import static com.nhnacademy.pms.tdd.Car.CarType.LARGE;
+
 import com.nhnacademy.pms.tdd.exception.CannotBeParkedCarTypeException;
 
 public class Entrance {
-    String scanLicensePlateNumber(Car car) {
+    public String scanLicensePlateNumber(Car car) {
         if (car.getLicenseNumber() == null) {
             throw new IllegalArgumentException("null");
         }
@@ -11,7 +13,7 @@ public class Entrance {
     }
 
     public void scanCarType(Car car) {
-        if (car instanceof LargeCar) {
+        if (car.getType() == LARGE) {
             throw new CannotBeParkedCarTypeException("The large car cannot be parked");
         }
     }

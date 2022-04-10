@@ -1,5 +1,6 @@
 package com.nhnacademy.pms.tdd;
 
+import static com.nhnacademy.pms.tdd.Car.CarType.COMPACT;
 import static com.nhnacademy.pms.tdd.Money.Currency.WON;
 import static com.nhnacademy.pms.tdd.ParkingSpace.ParkingSpaceCode.A1;
 import static com.nhnacademy.pms.tdd.ParkingSpace.ParkingSpaceCode.valueOf;
@@ -12,6 +13,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.nhnacademy.pms.tdd.exception.NotEnoughMoneyException;
+import com.nhnacademy.pms.tdd.repository.ParkingLotRepository;
+import com.nhnacademy.pms.tdd.service.ParkingManagementService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -38,9 +41,9 @@ class ParkingManagementServiceTest {
     @Test
     void parkAt_specificParkingSpace() {
         String licenseNumber = "34조5789";
-        service.parkAt(new ParkingSpace(A1, new Car(licenseNumber), LocalDateTime.now()));
+        service.parkAt(new ParkingSpace(A1, new Car(licenseNumber, COMPACT), LocalDateTime.now()));
 
-        ParkingSpace space = new ParkingSpace(valueOf("A1"), new Car(licenseNumber),
+        ParkingSpace space = new ParkingSpace(valueOf("A1"), new Car(licenseNumber, COMPACT),
             LocalDateTime.now());
         when(repository.findParkingSpaceByLicenseNumber(licenseNumber)).thenReturn(space);
 
@@ -55,7 +58,7 @@ class ParkingManagementServiceTest {
     @Test
     void exit_parkingLotWhenUserHasNoMoney_throwNotEnoughMoneyException() {
         String licenseNumber = "34조5789";
-        Car car = new Car(licenseNumber);
+        Car car = new Car(licenseNumber, COMPACT);
 
         Money money = spy(new Money(999L, WON));
         User user = spy(new User("CoRock", money, car));
@@ -77,7 +80,7 @@ class ParkingManagementServiceTest {
     @ValueSource(strings = {"2022-04-09T16:30:00", "2022-04-09T16:40:00", "2022-04-10T16:10:00"})
     void exit_payParkingFee(String parkingTime) {
         String licenseNumber = "34조5789";
-        Car car = new Car(licenseNumber);
+        Car car = new Car(licenseNumber, COMPACT);
 
         Money money = spy(new Money(10_000L, WON));
         User user = spy(new User("CoRock", money, car));
