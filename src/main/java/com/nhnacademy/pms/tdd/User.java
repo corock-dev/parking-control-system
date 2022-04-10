@@ -37,7 +37,7 @@ public class User {
         return tickets;
     }
 
-    public ParkingFee useParkingTicket(TwoHourParkingTicket twoHourParkingTicket) {
+    public ParkingFee useParkingTicket(ParkingTicket parkingTicket) {
         return null;
     }
 }
