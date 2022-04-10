@@ -74,4 +74,50 @@ class ExitMockTest {
 
         verify(exit, times(1)).pay(car, endParkingTime);
     }
+
+    @DisplayName("[4] 3시간 주차 후 2시간 주차권을 제시하면, 1시간 요금만 정산한다.")
+    @Test
+    void pay_whenTheUserHasParkingTicket_canDiscountable() {
+        Car car = new Car("34조5789", COMPACT);
+        LocalDateTime startParkingTime =
+            LocalDateTime.of(LocalDate.of(2022, 4, 9), LocalTime.of(16, 0, 0));
+        ParkingSpace space = new ParkingSpace(A1, car, startParkingTime);
+
+        LocalDateTime endParkingTime =
+            LocalDateTime.of(LocalDate.of(2022, 4, 9), LocalTime.of(19, 0, 0));
+        ParkingFee parkingFee = new OneDayParkingFee(new Money(1_000L, WON));
+        parkingFee = parkingFee.add(new AdditionalParkingFee(new Money(6_000L, WON)));
+
+        TwoHourParkingTicket ticket = mock(TwoHourParkingTicket.class);
+        User user = spy(new User("CoRock", new Money(1_000L, WON), car));
+        ParkingFee expected = new TotalParkingFee(new Money(1_000L, WON));
+        when(user.useParkingTicket(ticket)).thenReturn(expected);
+
+        assertThat(user.useParkingTicket(ticket).getAmount()).isEqualTo(expected.getAmount());
+
+        verify(user, times(1)).useParkingTicket(ticket);
+    }
+
+    @DisplayName("[4] 59분 주차 후 1시간 주차권을 제시하면 무료다.")
+    @Test
+    void pay_whenTheUserUsesOneHourParkingTicket_thenFree() {
+        Car car = new Car("34조5789", COMPACT);
+        LocalDateTime startParkingTime =
+            LocalDateTime.of(LocalDate.of(2022, 4, 9), LocalTime.of(16, 0, 0));
+        ParkingSpace space = new ParkingSpace(A1, car, startParkingTime);
+
+        LocalDateTime endParkingTime =
+            LocalDateTime.of(LocalDate.of(2022, 4, 9), LocalTime.of(16, 59, 0));
+        ParkingFee parkingFee = new OneDayParkingFee(new Money(1_000L, WON));
+        parkingFee = parkingFee.add(new AdditionalParkingFee(new Money(0L, WON)));
+
+        OneHourParkingTicket ticket = mock(OneHourParkingTicket.class);
+        User user = spy(new User("CoRock", new Money(0L, WON), car));
+        ParkingFee expected = new TotalParkingFee(new Money(0L, WON));
+        when(user.useParkingTicket(ticket)).thenReturn(expected);
+
+        assertThat(user.useParkingTicket(ticket).getAmount()).isEqualTo(expected.getAmount());
+
+        verify(user, times(1)).useParkingTicket(ticket);
+    }
 }
