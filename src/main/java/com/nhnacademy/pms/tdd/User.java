@@ -44,6 +44,10 @@ public class User {
         return car;
     }
 
+    public Membership getMembership() {
+        return membership;
+    }
+
     enum Membership {
         ANONYMOUS,
         PAYCO

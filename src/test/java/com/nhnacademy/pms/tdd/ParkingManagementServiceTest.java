@@ -115,27 +115,23 @@ class ParkingManagementServiceTest {
         return parsingDateTimeSources;
     }
 
-    @DisplayName("사용자가 PAYCO 회원인 경우에는 주차 요금이 10% 할인됩니다.")
+    @DisplayName("사용자가 PAYCO 회원인지 확인한다.")
     @Test
     public void pay_ifUserIsPaycoMembership_thenDiscountTenPercentParkingFee() {
         String licenseNumber = "34조5789";
         Car car = new Car(licenseNumber, COMPACT);
-        User user = new User("CoRock", new Money(13_500L, WON), car, PAYCO);
-
-        repository = spy(new ParkingLotRepository(mock(Entrance.class), mock(Exit.class)));
+        User user = spy(new User("CoRock", new Money(13_500L, WON), car, PAYCO));
 
         LocalDateTime startParkingTime = createLocalDateTime(2022, 4, 9, 16, 0, 0);
         ParkingSpace space = new ParkingSpace(A1, car, startParkingTime);
 
-        LocalDateTime endParkingTime = createLocalDateTime(2022, 4, 10, 16, 40, 0);
-
-        Receipt receipt = new Receipt(new Money(13_500L, WON));
         when(repository.findParkingSpaceByLicenseNumber(licenseNumber)).thenReturn(space);
         when(repository.findUserByParkingSpaceCar(space)).thenReturn(user);
-        // when(service.pay(car)).thenReturn(receipt);
 
-        // confirmMembership()
-        // assertThat(exit.pay(car, endParkingTime))
+        assertThat(repository.findUserByParkingSpaceCar(space))
+            .isNotNull()
+            .isInstanceOf(User.class);
+        assertThat(repository.findUserByParkingSpaceCar(space).getMembership()).isEqualTo(PAYCO);
     }
 
     private LocalDateTime createLocalDateTime(int year, int month, int dayOfMonth, int hour,
