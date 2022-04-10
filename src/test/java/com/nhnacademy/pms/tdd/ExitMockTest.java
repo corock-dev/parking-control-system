@@ -17,10 +17,11 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class ExitTest {
+class ExitMockTest {
     private Exit exit;
 
     @BeforeEach
@@ -54,5 +55,23 @@ class ExitTest {
             .isInstanceOf(ParkingFee.class);
 
         verify(exit, times(1)).pay(car);
+    }
+
+    @DisplayName("경차의 경우 요금이 50% 감면된다.")
+    @Test
+    void pay_isAvailableHalfPriceForCompactCar() {
+        Car car = new Car("34조5789", COMPACT);
+        LocalDateTime startParkingTime =
+            LocalDateTime.of(LocalDate.of(2022, 4, 9), LocalTime.of(16, 0, 0));
+        ParkingSpace space = new ParkingSpace(A1, car, startParkingTime);
+
+        LocalDateTime endParkingTime =
+            LocalDateTime.of(LocalDate.of(2022, 4, 9), LocalTime.of(16, 40, 0));
+        ParkingFee parkingFee = new HalfPastParkingFee(new Money(500L, WON));
+        when(exit.pay(car, endParkingTime)).thenReturn(parkingFee);
+
+        assertThat(exit.pay(car, endParkingTime)).isEqualTo(parkingFee);
+
+        verify(exit, times(1)).pay(car, endParkingTime);
     }
 }
