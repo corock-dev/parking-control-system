@@ -16,7 +16,6 @@ import static org.mockito.Mockito.when;
 import com.nhnacademy.pms.tdd.exception.NotEnoughMoneyException;
 import com.nhnacademy.pms.tdd.repository.ParkingLotRepository;
 import com.nhnacademy.pms.tdd.service.ParkingManagementService;
-import com.nhnacademy.pms.tdd.service.Receipt;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
